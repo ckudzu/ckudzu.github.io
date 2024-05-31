@@ -10,7 +10,7 @@
     font-family: 'mimizu';
     src: url('./MiMiZuFree.OTF') format('opentype');
   }
-  input[type="text"] {
+  #text {
     font-family: 'mimizu','meyrio';
   }
 </style>
@@ -18,7 +18,7 @@
   <h1>頭の悪い人ジェネレーター</h1>
   <canvas width="449" height="327" id="canvas"></canvas>
   <p><small>右クリックで生成した画像を保存できます</small></p>
-  <p>頭の悪い人「<textarea row="3" col="20" placeholder="ばなな" value="ばなな">」</p>
+  <p>頭の悪い人「<textarea id="text" row="3" col="20" placeholder="ばなな">ばなな</textarea>」</p>
   <p>
     font size
     <input type="button" name="" value="+" id="plus">
@@ -46,12 +46,12 @@
   });
 
   window.onload = function(){
-    text = $("input").value;
+    text = $("#text").value;
     draw();
   }
 
-  $("textarea").addEventListener("keyup", function(e){
-    text = $("input").value;
+  $("#text").addEventListener("keyup", function(e){
+    text = $("#text").value;
     draw();
   })
 
