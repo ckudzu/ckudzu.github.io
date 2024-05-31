@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>頭の悪い人ジェネレーター</title>
+</head>
+<style media="screen">
+  @font-face {
+    font-family: 'mimizu';
+    src: url('./MiMiZuFree.OTF') format('opentype');
+  }
+  input[type="text"] {
+    font-family: 'mimizu','meyrio';
+  }
+</style>
+<body>
+  <h1>頭の悪い人ジェネレーター</h1>
+  <canvas width="449" height="327" id="canvas"></canvas>
+  <p><small>右クリックで生成した画像を保存できます</small></p>
+  <p>頭の悪い人「<textarea row="3" col="20" placeholder="ばなな" value="ばなな">」</p>
+  <p>
+    font size
+    <input type="button" name="" value="+" id="plus">
+    <input type="button" name="" value="-" id="minus">
+  </p>
+  <!-- <a href="https://twitter.com/" target="_blank">ツイートする</a> -->
+<script>
+  var canvas;
+  var context;
+  var template;
+  var text;
+  var fontSize="46px";
+  var $ = function(e){
+    return document.querySelector(e);
+  }
+
+  window.addEventListener("load", function(){
+    canvas = $("#canvas");
+    context = canvas.getContext('2d');
+    template = new Image();
+    context.font = `${fontSize} 'mimizu'`;
+    text = "text" in getQuery() ? decodeURI(getQuery().text) : "";
+    template.src = "./template.PNG"
+    template.onload = draw;
+  });
+
+  window.onload = function(){
+    text = $("input").value;
+    draw();
+  }
+
+  $("textarea").addEventListener("keyup", function(e){
+    text = $("input").value;
+    draw();
+  })
+
+  $("#plus").addEventListener("click", function(e){
+    fontSize=fontSize.slice(0,-2);
+    fontSize++;
+    fontSize=`${fontSize}px`
+    console.log(fontSize);
+    context.font = `${fontSize} 'mimizu'`;
+    draw();
+  })
+
+  $("#minus").addEventListener("click", function(e){
+    fontSize=fontSize.slice(0,-2);
+    fontSize--;
+    fontSize=`${fontSize}px`
+    console.log(fontSize);
+    context.font = `${fontSize} 'mimizu'`;
+    draw();
+  })
+
+  var draw = function(){
+    context.drawImage(template, 0, 0, 449, 327);
+    tategaki(context, text, 350, 50);
+    // if(text != ""){
+    //   history.replaceState(null, null, '/aho-human/?text=' + text);
+    // }else{
+    //   history.replaceState(null, null, '/aho-human/');
+    // }
+    // makeURL();
+  }
+
+  var tategaki = function(context, text, x, y) {
+    var textList = text.split('\n');
+    var lineHeight = context.measureText("あ").width;
+    textList.forEach(function(elm, i) {
+      Array.prototype.forEach.call(elm, function(ch, j) {
+        if(ch == "ー") ch = "┃";
+        context.fillText(ch, x-lineHeight*i, y+(lineHeight+1)*j);
+      });
+    });
+  };
+
+  var getQuery = function(){
+    var vars = [], max = 0, hash = "", array = "";
+    var url = window.location.search;
+    hash  = url.slice(1).split('&');
+    max = hash.length;
+    for (var i = 0; i < max; i++) {
+      array = hash[i].split('=');    //keyと値に分割。
+      vars.push(array[0]);    //末尾にクエリ文字列のkeyを挿入。
+      vars[array[0]] = array[1];    //先ほど確保したkeyに、値を代入。
+    }
+    return vars;
+  }
+
+  // var makeURL = function(){
+  //   var base = "https://twitter.com/intent/tweet?text=頭の悪い人「";
+  //   $("a").setAttribute("href", base + text + "」&hashtags=aho-human" + "&url=" + encodeURIComponent(location.href) )
+  // }
+</script>
+
+</body>
+</html>
